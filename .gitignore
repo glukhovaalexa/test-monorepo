@@ -1,0 +1,9 @@
+/src/admin/vendor
+/src/server/vendor
+/src/admin/.env
+/src/server/.env
+/src/admin/.idea
+/src/server/.idea
+/src/admin/.infrastructure/docker/postgres/
+/src/server/.infrastructure/docker/postgres/
+./.idea/

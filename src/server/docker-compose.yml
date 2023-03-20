@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx
+    ports:
+      - 8080:80
+    networks:
+        - site-monorepo
+    volumes:
+      - ./:/app
+      - ./.infrastructure/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+
+  php-fpm:
+    build:
+      context: .
+      dockerfile: ./.infrastructure/docker/php-fpm/Dockerfile
+    networks:
+        - site-monorepo
+    volumes:
+      - ./:/app
+
+  postgres:
+    image: postgres:13.3
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: default
+      POSTGRES_DB: default
+    networks:
+        - site-monorepo
+        - shared-db
+    volumes:
+      - ./.infrastructure/docker/postgres:/var/lib/postgresql/data/
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+        - site-monorepo
+        - shared-redis
+networks:
+    site-monorepo:
+        driver: "bridge"
+    shared-db:
+        name: shared-db
+        external: true
+    shared-redis:
+        name: shared-redis
+        external: true
